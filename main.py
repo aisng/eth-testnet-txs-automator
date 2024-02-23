@@ -1,46 +1,30 @@
 import os
+import random
 import time
+from testnets import swan
 from testnet_tx import TestnetTx
 
+PK = os.environ.get("HASH_MASH")
 
-contr_swan_msg = "0xAE3C20700f5D5F17BD4e5BaA3ce2fF220A15854D"
-contr_swan_msg_abi = [{"inputs": [
-    {
-        "internalType": "string",
-        "name": "newMessage",
-        "type": "string"
-    }
-],
-    "name": "writeMessage",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-},
-    {
-    "inputs": [],
-    "name": "readMessage",
-    "outputs": [
-        {
-            "internalType": "string",
-            "name": "",
-            "type": "string"
-        }
-    ],
-    "stateMutability": "view",
-    "type": "function"}]
+with open("messages.txt", "r", encoding="utf-8") as f:
+    messages = [line.strip() for line in f.readlines()]
+
+contr_swan_msg = swan.get("contract")
+contr_swan_msg_abi = swan.get("abi")
 
 
 def main() -> None:
-    pk = os.environ.get("HASH_MASH")
-
-    swan_testnet = TestnetTx(
-        rpc_url="https://saturn-rpc.swanchain.io", chain_id=2024, private_key=pk)
+    Swan = TestnetTx(
+        rpc_url="https://saturn-rpc.swanchain.io", chain_id=2024, private_key=PK)
 
     while True:
-        tx1 = swan_testnet.call_contract_method(
-            contract_addr=contr_swan_msg, abi=contr_swan_msg_abi, method_name="writeMessage", params="yohiva")
-        print(tx1)
-        time.sleep(3)
+        msg = random.choice(messages)
+
+        swan_msg_tx = Swan.call_contract_method(
+            contract_addr=contr_swan_msg, abi=contr_swan_msg_abi, method_name="writeMessage", params=msg)
+
+        if swan_msg_tx:
+            print("MSG", swan_msg_tx)
 
 
 if __name__ == "__main__":

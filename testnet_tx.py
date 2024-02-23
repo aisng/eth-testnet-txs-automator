@@ -1,4 +1,3 @@
-from typing import Any
 from web3 import Web3
 
 
@@ -10,7 +9,16 @@ class TestnetTx:
         self.sender = self.w3.eth.account.from_key(
             private_key=self.private_key)
 
-    def sign_and_send(self, addr_to: str, amount: float | int, unit: str = "ether") -> str:
+    def sign_and_send(self, addr_to: str, amount: float | int, unit: str = "ether") -> str | None:
+        """
+        Perform a simple signed transfer from one wallet to another.
+
+        :param addr_to: receiver's address.
+        :param amount: amount to be sent.
+        :param unit: name of a token being sent. "ether" if not specified otherwise.
+
+        :return: transaction hash on success, None otherwise.
+        """
         tx = {
             "from": self.sender.address,
             "to": addr_to,
@@ -24,9 +32,23 @@ class TestnetTx:
         signed_tx = self.w3.eth.account.sign_transaction(
             tx, self.private_key)
         tx_hash = self.w3.eth.send_raw_transaction(signed_tx.rawTransaction)
-        return tx_hash.hex()
+        receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash)
+        if receipt.get("status") == 1:
+            return tx_hash.hex()
+        return None
 
-    def call_contract_method(self, contract_addr: str, abi: list, method_name: str, params: list = None) -> str:
+    def call_contract_method(self, contract_addr: str, abi: list, method_name: str, params: list = None) -> str | None:
+        """
+        Interact with a Solidity Smart Contract deployed on chain.
+
+        :param contract_addr: contract's address.
+        :param abi: contract's ABI.
+        :param method_name: name of a method/function of a contract that's being called.
+        :param params: list of parameters to pass the called function. 
+
+        :return: transaction hash on success, None otherwise.
+        """
+
         tx = {
             "from": self.sender.address,
             "nonce": self.w3.eth.get_transaction_count(self.sender.address),
@@ -41,4 +63,33 @@ class TestnetTx:
         signed_tx = self.w3.eth.account.sign_transaction(
             built_tx, self.private_key)
         tx_hash = self.w3.eth.send_raw_transaction(signed_tx.rawTransaction)
-        return tx_hash.hex()
+        receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash)
+        if receipt.get("status") == 1:
+            return tx_hash.hex()
+        return None
+
+    def check_balance(self, unit: str = "ether") -> int | float:
+        """
+        Get balance of current account.
+
+        :param unit: desired balance unit. "ether" if not specified otherwise.
+
+        :return: balance in ETH.
+        """
+        balance = self.w3.eth.get_balance(account=self.sender.address)
+        return self.w3.from_wei(number=balance, unit=unit)
+
+    # async def is_tx_successful(self, tx_hash) -> None:
+    #     while True:
+    #         receipt = await self.w3.eth.get_transaction_receipt(tx_hash)
+    #         if receipt:
+    #             if receipt['status'] == 1:
+    #                 print('Transaction completed successfully.')
+    #                 break
+    #             elif receipt['status'] == 0:
+    #                 print('Transaction failed.')
+    #                 break
+    #             else:
+    #                 print('Transaction status unknown.')
+
+    #         asyncio.sleep(5)

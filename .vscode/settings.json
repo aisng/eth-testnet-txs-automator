@@ -1,0 +1,7 @@
+{
+  "autopep8.args": ["--max-line-length=120", "--experimental", "--ignore=E420"],
+  "pylint.args": [
+    "--max-line-length=120",
+    "--disable=W0718, C0103, C0413, C0114, C0115, C0116"
+  ]
+}
