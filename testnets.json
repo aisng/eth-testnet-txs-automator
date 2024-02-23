@@ -1,0 +1,159 @@
+{
+  "swan": {
+    "MessageContract": {
+      "contract": "0xAE3C20700f5D5F17BD4e5BaA3ce2fF220A15854D",
+      "abi": [
+        {
+          "inputs": [
+            {
+              "internalType": "string",
+              "name": "newMessage",
+              "type": "string"
+            }
+          ],
+          "name": "writeMessage",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "readMessage",
+          "outputs": [
+            {
+              "internalType": "string",
+              "name": "",
+              "type": "string"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        }
+      ]
+    },
+    "Counter": {
+      "contract": "0x3d845c9EB3a628812E5595e463f91c63020A3FB8",
+      "abi": [
+        {
+          "type": "function",
+          "name": "decrement",
+          "inputs": [],
+          "outputs": [],
+          "stateMutability": "nonpayable"
+        },
+        {
+          "type": "function",
+          "name": "increment",
+          "inputs": [],
+          "outputs": [],
+          "stateMutability": "nonpayable"
+        },
+        {
+          "type": "function",
+          "name": "number",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256",
+              "internalType": "uint256"
+            }
+          ],
+          "stateMutability": "view"
+        },
+        {
+          "type": "function",
+          "name": "setNumber",
+          "inputs": [
+            {
+              "name": "newNumber",
+              "type": "uint256",
+              "internalType": "uint256"
+            }
+          ],
+          "outputs": [],
+          "stateMutability": "nonpayable"
+        }
+      ]
+    }
+  },
+
+  "taiko": {
+    "Counter": {
+      "contract": "0xd49FbF965F7cDF166AfF216f914E59479782ea7E",
+      "abi": [
+        {
+          "type": "function",
+          "name": "decrement",
+          "inputs": [],
+          "outputs": [],
+          "stateMutability": "nonpayable"
+        },
+        {
+          "type": "function",
+          "name": "increment",
+          "inputs": [],
+          "outputs": [],
+          "stateMutability": "nonpayable"
+        },
+        {
+          "type": "function",
+          "name": "number",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256",
+              "internalType": "uint256"
+            }
+          ],
+          "stateMutability": "view"
+        },
+        {
+          "type": "function",
+          "name": "setNumber",
+          "inputs": [
+            {
+              "name": "newNumber",
+              "type": "uint256",
+              "internalType": "uint256"
+            }
+          ],
+          "outputs": [],
+          "stateMutability": "nonpayable"
+        }
+      ]
+    },
+    "MessageContract": {
+      "contract": "0x24B393718585A705a8DA3B7114916920058c1535",
+      "abi": [
+        {
+          "inputs": [],
+          "name": "readMessage",
+          "outputs": [
+            {
+              "internalType": "string",
+              "name": "",
+              "type": "string"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "string",
+              "name": "newMessage",
+              "type": "string"
+            }
+          ],
+          "name": "writeMessage",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        }
+      ]
+    }
+  }
+}

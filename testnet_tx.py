@@ -29,10 +29,9 @@ class TestnetTx:
             "maxPriorityFeePerGas": self.w3.to_wei(1, "gwei"),
             "chainId": self.chain_id
         }
-        signed_tx = self.w3.eth.account.sign_transaction(
-            tx, self.private_key)
+        signed_tx = self.w3.eth.account.sign_transaction(tx, self.private_key)
         tx_hash = self.w3.eth.send_raw_transaction(signed_tx.rawTransaction)
-        receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash)
+        receipt = self.w3.eth.wait_for_transaction_receipt(transaction_hash=tx_hash, timeout=360)
         if receipt.get("status") == 1:
             return tx_hash.hex()
         return None
@@ -58,12 +57,16 @@ class TestnetTx:
             "chainId": self.chain_id
         }
         Contract = self.w3.eth.contract(address=contract_addr, abi=abi)
-        contract_method = Contract.functions[method_name](params)
+
+        if params:
+            contract_method = Contract.functions[method_name](params)
+        else:
+            contract_method = Contract.functions[method_name]()
+
         built_tx = contract_method.build_transaction(tx)
-        signed_tx = self.w3.eth.account.sign_transaction(
-            built_tx, self.private_key)
+        signed_tx = self.w3.eth.account.sign_transaction(built_tx, self.private_key)
         tx_hash = self.w3.eth.send_raw_transaction(signed_tx.rawTransaction)
-        receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash)
+        receipt = self.w3.eth.wait_for_transaction_receipt(transaction_hash=tx_hash, timeout=360)
         if receipt.get("status") == 1:
             return tx_hash.hex()
         return None
@@ -78,18 +81,3 @@ class TestnetTx:
         """
         balance = self.w3.eth.get_balance(account=self.sender.address)
         return self.w3.from_wei(number=balance, unit=unit)
-
-    # async def is_tx_successful(self, tx_hash) -> None:
-    #     while True:
-    #         receipt = await self.w3.eth.get_transaction_receipt(tx_hash)
-    #         if receipt:
-    #             if receipt['status'] == 1:
-    #                 print('Transaction completed successfully.')
-    #                 break
-    #             elif receipt['status'] == 0:
-    #                 print('Transaction failed.')
-    #                 break
-    #             else:
-    #                 print('Transaction status unknown.')
-
-    #         asyncio.sleep(5)

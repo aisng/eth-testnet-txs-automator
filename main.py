@@ -1,30 +1,77 @@
 import os
 import random
 import time
-from testnets import swan
+import json
+# from testnets import swan, taiko
 from testnet_tx import TestnetTx
 
 PK = os.environ.get("HASH_MASH")
 
+with open("testnets.json", "r", encoding="utf-8") as f:
+    contracts = json.load(f)
+
 with open("messages.txt", "r", encoding="utf-8") as f:
     messages = [line.strip() for line in f.readlines()]
 
-contr_swan_msg = swan.get("contract")
-contr_swan_msg_abi = swan.get("abi")
+# swan
+swan_msg = contracts.get("swan").get("MessageContract").get("contract")
+swan_msg_abi = contracts.get("swan").get("MessageContract").get("abi")
+
+swan_counter = contracts.get("swan").get("Counter").get("contract")
+swan_counter_abi = contracts.get("swan").get("Counter").get("abi")
+
+# taiko
+taiko_counter = contracts.get("taiko").get("Counter").get("contract")
+taiko_counter_abi = contracts.get("taiko").get("Counter").get("abi")
+
+taiko_msg = contracts.get("taiko").get("MessageContract").get("contract")
+taiko_msg_abi = contracts.get("taiko").get("MessageContract").get("abi")
 
 
 def main() -> None:
-    Swan = TestnetTx(
-        rpc_url="https://saturn-rpc.swanchain.io", chain_id=2024, private_key=PK)
+    Swan = TestnetTx(rpc_url="https://saturn-rpc.swanchain.io", chain_id=2024, private_key=PK)
+    Taiko = TestnetTx(rpc_url="https://rpc.katla.taiko.xyz", chain_id=167008, private_key=PK)
 
     while True:
-        msg = random.choice(messages)
+        # interact with Counter.sol
+        counter_method = random.choice(("setNumber", "increment", "decrement"))
 
-        swan_msg_tx = Swan.call_contract_method(
-            contract_addr=contr_swan_msg, abi=contr_swan_msg_abi, method_name="writeMessage", params=msg)
+        taiko_counter_resp = Taiko.call_contract_method(
+            contract_addr=taiko_counter,
+            abi=taiko_counter_abi,
+            method_name=counter_method,
+            params=1 if counter_method == "setNumber" else None
+        )
+        print("TAIKO COUNTER:", taiko_counter_resp)
 
-        if swan_msg_tx:
-            print("MSG", swan_msg_tx)
+        swan_counter_resp = Swan.call_contract_method(
+            contract_addr=swan_counter,
+            abi=swan_counter_abi,
+            method_name=counter_method,
+            params=1 if counter_method == "setNumber" else None
+        )
+
+        print("SWAN COUNTER:", swan_counter_resp)
+
+        # interact with MessageContract.sol
+        message_method = random.choice(("writeMessage", "readMessage"))
+        message = random.choice(messages)
+
+        taiko_msg_resp = Taiko.call_contract_method(contract_addr=taiko_msg,
+                                                    abi=taiko_msg_abi,
+                                                    method_name=message_method,
+                                                    params=message if message_method == "writeMessage" else None
+                                                    )
+        print("TAIKO MSG:", taiko_msg_resp)
+
+        swan_msg_resp = Swan.call_contract_method(contract_addr=swan_msg,
+                                                  abi=swan_msg_abi,
+                                                  method_name=message_method,
+                                                  params=message if message_method == "writeMessage" else None
+                                                  )
+        print("SWAN MSG:", swan_msg_resp)
+
+        time.sleep(1.5)
 
 
 if __name__ == "__main__":
