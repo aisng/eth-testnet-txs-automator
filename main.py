@@ -35,23 +35,24 @@ def main() -> None:
     while True:
         # interact with Counter.sol
         counter_method = random.choice(("setNumber", "increment", "decrement"))
+        param_number = random.choice(range(1, 30))
 
         taiko_counter_resp = Taiko.call_contract_method(
             contract_addr=taiko_counter,
             abi=taiko_counter_abi,
             method_name=counter_method,
-            params=1 if counter_method == "setNumber" else None
+            params=param_number if counter_method == "setNumber" else None
         )
-        print("TAIKO COUNTER:", taiko_counter_resp)
+        print("TAIKO COUNTER:", *taiko_counter_resp)
 
         swan_counter_resp = Swan.call_contract_method(
             contract_addr=swan_counter,
             abi=swan_counter_abi,
             method_name=counter_method,
-            params=1 if counter_method == "setNumber" else None
+            params=param_number if counter_method == "setNumber" else None
         )
 
-        print("SWAN COUNTER:", swan_counter_resp)
+        print("SWAN COUNTER:", *swan_counter_resp)
 
         # interact with MessageContract.sol
         message_method = random.choice(("writeMessage", "readMessage"))
@@ -62,14 +63,14 @@ def main() -> None:
                                                     method_name=message_method,
                                                     params=message if message_method == "writeMessage" else None
                                                     )
-        print("TAIKO MSG:", taiko_msg_resp)
+        print("TAIKO MSG:", *taiko_msg_resp)
 
         swan_msg_resp = Swan.call_contract_method(contract_addr=swan_msg,
                                                   abi=swan_msg_abi,
                                                   method_name=message_method,
                                                   params=message if message_method == "writeMessage" else None
                                                   )
-        print("SWAN MSG:", swan_msg_resp)
+        print("SWAN MSG:", *swan_msg_resp)
 
         time.sleep(1.5)
 
