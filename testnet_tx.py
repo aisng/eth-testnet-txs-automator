@@ -31,7 +31,7 @@ class TestnetTx:
         }
         signed_tx = self.w3.eth.account.sign_transaction(tx, self.private_key)
         tx_hash = self.w3.eth.send_raw_transaction(signed_tx.rawTransaction)
-        receipt = self.w3.eth.wait_for_transaction_receipt(transaction_hash=tx_hash, timeout=360)
+        receipt = self.w3.eth.wait_for_transaction_receipt(transaction_hash=tx_hash, timeout=740)
         if receipt.get("status") == 1:
             return tx_hash.hex()
         return None
@@ -66,7 +66,7 @@ class TestnetTx:
         built_tx = contract_method.build_transaction(tx)
         signed_tx = self.w3.eth.account.sign_transaction(built_tx, self.private_key)
         tx_hash = self.w3.eth.send_raw_transaction(signed_tx.rawTransaction)
-        receipt = self.w3.eth.wait_for_transaction_receipt(transaction_hash=tx_hash, timeout=360)
+        receipt = self.w3.eth.wait_for_transaction_receipt(transaction_hash=tx_hash, timeout=740)
         curr_val = contract_method.call({"from": self.sender.address})
         if receipt.get("status") == 1:
             return tx_hash.hex(), curr_val
