@@ -36,6 +36,8 @@ def main() -> None:
         # interact with Counter.sol
         counter_method = random.choice(("setNumber", "increment", "decrement"))
         param_number = random.choice(range(1, 30))
+        sleep_time_short = random.choice(range(30, 50))
+        sleep_time_long = random.choice(range(420, 720))
 
         taiko_counter_resp = Taiko.call_contract_method(
             contract_addr=taiko_counter,
@@ -44,6 +46,8 @@ def main() -> None:
             params=param_number if counter_method == "setNumber" else None
         )
         print("TAIKO COUNTER:", *taiko_counter_resp)
+
+        time.sleep(sleep_time_short)
 
         swan_counter_resp = Swan.call_contract_method(
             contract_addr=swan_counter,
@@ -54,6 +58,7 @@ def main() -> None:
 
         print("SWAN COUNTER:", *swan_counter_resp)
 
+        time.sleep(sleep_time_long)
         # interact with MessageContract.sol
         message_method = random.choice(("writeMessage", "readMessage"))
         message = random.choice(messages)
@@ -65,6 +70,8 @@ def main() -> None:
                                                     )
         print("TAIKO MSG:", *taiko_msg_resp)
 
+        time.sleep(sleep_time_short)
+
         swan_msg_resp = Swan.call_contract_method(contract_addr=swan_msg,
                                                   abi=swan_msg_abi,
                                                   method_name=message_method,
@@ -72,7 +79,7 @@ def main() -> None:
                                                   )
         print("SWAN MSG:", *swan_msg_resp)
 
-        time.sleep(1.5)
+        time.sleep(sleep_time_long)
 
 
 if __name__ == "__main__":
