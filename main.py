@@ -61,10 +61,9 @@ def main() -> None:
 
         time.sleep(sleep_time_long)
         # interact with MessageContract.sol
-        message_method = random.choice(("writeMessage", "readMessage", "writeMessage",
+        message_method = random.choice(("writeMessage", "writeMessage",
                                        "readMessage", "writeMessage", "readMessage"))
         message = random.choice(messages)
-
         taiko_msg_resp = Taiko.call_contract_method(contract_addr=taiko_msg,
                                                     abi=taiko_msg_abi,
                                                     method_name=message_method,
