@@ -34,7 +34,8 @@ def main() -> None:
 
     while True:
         # interact with Counter.sol
-        counter_method = random.choice(("setNumber", "increment", "decrement"))
+        counter_method = random.choice(("setNumber", "increment", "decrement", "setNumber",
+                                       "increment", "decrement", "setNumber", "increment", "decrement"))
         param_number = random.choice(range(1, 30))
         sleep_time_short = random.choice(range(30, 50))
         sleep_time_long = random.choice(range(420, 720))
@@ -60,7 +61,8 @@ def main() -> None:
 
         time.sleep(sleep_time_long)
         # interact with MessageContract.sol
-        message_method = random.choice(("writeMessage", "readMessage"))
+        message_method = random.choice(("writeMessage", "readMessage", "writeMessage",
+                                       "readMessage", "writeMessage", "readMessage"))
         message = random.choice(messages)
 
         taiko_msg_resp = Taiko.call_contract_method(contract_addr=taiko_msg,
